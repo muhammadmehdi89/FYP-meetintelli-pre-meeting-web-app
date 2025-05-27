@@ -15,10 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from home.views import *
+from django.urls import path, include
+from home.views import home
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
-    path('', home),
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),  # This enables all auth URLs
+    path('', login_required(home), name='home'),  # Only this home route needed
 ]

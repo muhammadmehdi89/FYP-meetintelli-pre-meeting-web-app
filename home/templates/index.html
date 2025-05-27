@@ -1,226 +1,974 @@
-<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Hello</h1>
-
-    <h1>{{ title }}</h1>
-    <p>{{ description }}</p>
-
-</body>
-</html>
--->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeetIntelli Chatbot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>MeetIntelli - AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #e0e7ff;
+            --secondary: #10b981;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-primary: #f9fafb;
+            --bg-secondary: #ffffff;
+            --border-color: #e5e7eb;
+            --user-bubble: #4f46e5;
+            --bot-bubble: #ffffff;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            display: flex;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
             height: 100vh;
-            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
             display: flex;
             flex-direction: column;
-            flex: 1;
+            height: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
         }
 
         .header {
-            background-color: #0078ff;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary);
             color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: 500;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
         }
 
         .chat-container {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            margin: 0 auto;
-            max-width: 700px;
+            flex: 1;
+            height: 100%;
+            background-color: var(--bg-secondary);
+            position: relative;
         }
 
         .chat-history {
             flex: 1;
-            padding: 20px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 1.5rem;
             overflow-y: auto;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            scroll-behavior: smooth;
+            background-color: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            background-image: 
+                linear-gradient(rgba(249, 250, 251, 0.9), rgba(249, 250, 251, 0.9)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="%23e5e7eb" stroke-width="0.5"><path d="M0 0 L100 100 M100 0 L0 100"/></svg>');
+            background-size: 40px 40px;
         }
 
         .chat-message {
-            margin-bottom: 10px;
             display: flex;
-            align-items: center;
+            max-width: 85%;
+            gap: 0.75rem;
         }
 
         .chat-message.user {
-            justify-content: flex-end;
+            align-self: flex-end;
         }
 
         .chat-message.bot {
-            justify-content: flex-start;
+            align-self: flex-start;
+        }
+
+        .message-avatar {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0.25rem;
+        }
+
+        .message-avatar.user {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .message-avatar.bot {
+            background-color: #f3f4f6;
+            color: var(--text-secondary);
+        }
+
+        .message-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            max-width: calc(100% - 40px);
+        }
+
+        .message-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            padding: 0 0.5rem;
         }
 
         .chat-bubble {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 16px;
-            line-height: 1.4;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-lg);
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            position: relative;
+            word-wrap: break-word;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
         }
 
         .chat-bubble.user {
-            background-color: #0078ff;
+            background-color: var(--user-bubble);
             color: white;
-            border-top-right-radius: 0;
+            border-bottom-right-radius: var(--radius-sm);
         }
 
         .chat-bubble.bot {
-            background-color: #f1f1f1;
-            color: #333;
-            border-top-left-radius: 0;
+            background-color: var(--bot-bubble);
+            color: var(--text-primary);
+            border-bottom-left-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-bubble.has-shadow {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .input-container {
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
         .input-area {
             display: flex;
+            gap: 0.75rem;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
+            position: relative;
         }
 
-        .input-area input[type="text"] {
+        .text-input {
             flex: 1;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            outline: none;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            font-size: 0.9375rem;
+            transition: var(--transition);
+            background-color: var(--bg-primary);
+            min-height: 48px;
+            max-height: 120px;
+            resize: none;
+            line-height: 1.5;
         }
 
-        .input-area input[type="file"] {
+        .text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .file-upload {
             display: none;
         }
 
-        .custom-file-label {
-            display: inline-block;
-            padding: 10px 16px;
-            background-color: #0078ff;
-            color: white;
-            border-radius: 8px;
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             cursor: pointer;
-            font-size: 14px;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
         }
 
-        button {
-            background-color: #0078ff;
+        .file-upload-label:hover {
+            background-color: #f3f4f6;
+            color: var(--primary);
+        }
+
+        .send-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background-color: var(--primary);
             color: white;
-            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
+            font-weight: 500;
             cursor: pointer;
-            font-size: 16px;
+            transition: var(--transition);
         }
 
-        button:hover {
-            background-color: #005bb5;
+        .send-button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+        .file-names {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .file-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--bg-primary);
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .file-tag-remove {
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .file-tag-remove:hover {
+            color: #ef4444;
         }
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
         }
 
-        .action-buttons button {
+        .action-button {
             flex: 1;
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
+            padding: 0.625rem;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
             display: flex;
-            height: 100vh;
-            background-color: #f4f4f9;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
-        .file-names {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #555;
+        .action-button:hover {
+            background-color: #f3f4f6;
         }
+
+        .action-button.danger {
+            color: #ef4444;
+            border-color: #fee2e2;
+            background-color: #fef2f2;
+        }
+
+        .action-button.danger:hover {
+            background-color: #fee2e2;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background-color: var(--bot-bubble);
+            border-radius: var(--radius-lg);
+            border-bottom-left-radius: var(--radius-sm);
+            align-self: flex-start;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .typing-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .typing-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .typing-dots {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--text-secondary);
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.6;
+            }
+            30% {
+                transform: translateY(-3px);
+                opacity: 1;
+            }
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .chat-message:hover .message-actions {
+            opacity: 1;
+        }
+
+        .message-action {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: transparent;
+            border: none;
+        }
+
+        .message-action:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--text-primary);
+        }
+
+        .message-action.copy:hover {
+            color: var(--primary);
+        }
+
+        .message-action.like:hover {
+            color: #ef4444;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .chat-message {
+                max-width: 90%;
+            }
+            
+            .input-area {
+                gap: 0.5rem;
+            }
+            
+            .file-upload-label, .send-button {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .text-input {
+                min-height: 42px;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Floating action button */
+        .fab {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-xl);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 20;
+            border: none;
+        }
+
+        .fab:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .fab:active {
+            transform: translateY(0);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1f2937;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            margin-bottom: 0.5rem;
+            z-index: 10;
+        }
+
+        /* Pulse animation for new messages */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .new-message {
+            animation: pulse 0.5s ease-in-out;
+        }
+        .sidebar {
+    width: 260px;
+    height: 100vh;
+    background-color: #f8f9fa;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 5;
+}
+
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.new-chat-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.new-chat-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.chat-history-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.chat-history-item {
+    margin-bottom: 0.25rem;
+}
+
+.chat-history-item.active {
+    background-color: var(--primary-light);
+    border-radius: var(--radius-md);
+}
+
+.chat-history-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+.chat-history-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.chat-title {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.875rem;
+}
+
+.chat-date {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.main-content {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .chat-history-list {
+        display: flex;
+        overflow-x: auto;
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+    
+    .chat-history-item {
+        min-width: 200px;
+        margin-bottom: 0;
+    }
+}
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">MeetIntelli Chatbot</div>
-        <div class="chat-container">
-            <div class="chat-history">
-                {% for chat in chat_history %}
-                    <div class="chat-message user">
-                        <div class="chat-bubble user">{{ chat.question }}</div>
-                    </div>
-                    <div class="chat-message bot">
-                        <div class="chat-bubble bot">{{ chat.response }}</div>
-                    </div>
-                {% endfor %}
-            </div>
-            <form method="post" enctype="multipart/form-data">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <button class="new-chat-btn" onclick="document.getElementById('new-chat-form').submit()">
+                <i class="fas fa-plus"></i> New chat
+            </button>
+            <form id="new-chat-form" method="post" action="{% url 'home' %}" style="display: none;">
                 {% csrf_token %}
-                <div class="input-area">
-                    <input type="text" name="question" placeholder="Ask a question..." required>
-                    <label for="file-upload" class="custom-file-label">Upload PDF</label>
-                    <input type="file" id="file-upload" name="pdf_files" multiple>
-                    <button type="submit">Send</button>
-                </div>
-                <div class="file-names" id="file-names"></div>
-            </form>
-            <form method="post" class="action-buttons">
-                {% csrf_token %}
-                <button type="submit" name="clear_chat">Clear Chat</button>
-                {% if pdf_uploaded %}
-                    <button type="submit" name="remove_pdf">Remove PDFs</button>
-                {% endif %}
+                <input type="hidden" name="new_chat" value="1">
             </form>
         </div>
+        <div class="chat-history-list">
+            {% for session in chat_sessions %}
+            <div class="chat-history-item {% if session.id == active_session_id %}active{% endif %}">
+                <form method="post" action="{% url 'home' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="switch_session" value="1">
+                    <input type="hidden" name="session_id" value="{{ session.id }}">
+                    <button type="submit" class="chat-history-btn">
+                        <i class="fas fa-comment-dots"></i>
+                        <span class="chat-title">{{ session.title }}</span>
+                        <span class="chat-date">{{ session.updated_at|date:"M d" }}</span>
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <span>MeetIntelli</span>
+            </div>
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <div class="chat-container">
+                <div class="chat-history" id="chat-history">
+                    <div class="chat-message bot welcome-message">
+                        <div class="message-avatar bot">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-meta">MeetIntelli AI • Just now</div>
+                            <div class="chat-bubble bot has-shadow">
+                                Hello! I'm MeetIntelli, your AI assistant. How can I help you today?
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% for chat in chat_history %}
+                    <div class="chat-message user">
+                        <div class="message-content">
+                            <div class="message-meta" style="text-align: right;">You • {{ chat.timestamp|default:"Just now" }}</div>
+                            <div class="chat-bubble user">
+                                {{ chat.question }}
+                            </div>
+                        </div>
+                        <div class="message-avatar user">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="chat-message bot">
+                        <div class="message-avatar bot">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-meta">MeetIntelli AI • {{ chat.timestamp|default:"Just now" }}</div>
+                            <div class="chat-bubble bot has-shadow">
+                                {{ chat.response }}
+                            </div>
+                            <div class="message-actions">
+                                <button class="message-action copy" data-tooltip="Copy" onclick="copyToClipboard(this, '{{ chat.response|escapejs }}')">
+                                    <i class="far fa-copy"></i>
+                                </button>
+                                <button class="message-action like" data-tooltip="Like">
+                                    <i class="far fa-thumbs-up"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="input-container">
+                    <form method="post" enctype="multipart/form-data" class="form-container">
+                        {% csrf_token %}
+                        <div class="input-area">
+                            <textarea name="question" class="text-input" placeholder="Message MeetIntelli..." rows="1" required></textarea>
+                            <label for="file-upload" class="file-upload-label tooltip" data-tooltip="Upload PDF">
+                                <i class="fas fa-file-pdf"></i>
+                            </label>
+                            <input type="file" id="file-upload" class="file-upload" name="pdf_files" multiple accept=".pdf">
+                            <button type="submit" class="send-button tooltip" data-tooltip="Send message">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="file-names" id="file-names"></div>
+                    </form>
+                    
+                    <form method="post" class="action-buttons">
+                        {% csrf_token %}
+                        <button type="submit" name="clear_chat" class="action-button">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Clear Chat</span>
+                        </button>
+                        {% if pdf_uploaded %}
+                        <button type="submit" name="remove_pdf" class="action-button danger">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>Remove PDFs</span>
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </main>
     </div>
 
+    <button class="fab tooltip" data-tooltip="New chat" id="new-chat-btn">
+        <i class="fas fa-plus"></i>
+    </button>
+
     <script>
-        // Script to display uploaded file names
-        document.getElementById('file-upload').addEventListener('change', function () {
+        // Display uploaded file names with removal option
+        document.getElementById('file-upload').addEventListener('change', function() {
             const fileList = this.files;
             const fileNamesDiv = document.getElementById('file-names');
-            fileNamesDiv.innerHTML = ''; // Clear previous file names
-
+            fileNamesDiv.innerHTML = '';
+            
             if (fileList.length > 0) {
                 for (let i = 0; i < fileList.length; i++) {
-                    const fileName = document.createElement('div');
-                    fileName.textContent = fileList[i].name;
-                    fileNamesDiv.appendChild(fileName);
+                    const fileTag = document.createElement('div');
+                    fileTag.className = 'file-tag';
+                    
+                    const fileIcon = document.createElement('i');
+                    fileIcon.className = 'fas fa-file-pdf';
+                    
+                    const fileName = document.createElement('span');
+                    fileName.textContent = truncateFileName(fileList[i].name, 20);
+                    
+                    const removeIcon = document.createElement('span');
+                    removeIcon.className = 'file-tag-remove';
+                    removeIcon.innerHTML = '<i class="fas fa-times"></i>';
+                    removeIcon.onclick = (e) => {
+                        e.stopPropagation();
+                        // Create new DataTransfer to remove the file
+                        const dataTransfer = new DataTransfer();
+                        for (let j = 0; j < fileList.length; j++) {
+                            if (j !== i) {
+                                dataTransfer.items.add(fileList[j]);
+                            }
+                        }
+                        this.files = dataTransfer.files;
+                        fileTag.remove();
+                    };
+                    
+                    fileTag.appendChild(fileIcon);
+                    fileTag.appendChild(fileName);
+                    fileTag.appendChild(removeIcon);
+                    fileNamesDiv.appendChild(fileTag);
                 }
             }
         });
+
+        // Auto-scroll to bottom of chat
+        const chatHistory = document.getElementById('chat-history');
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+
+        // Focus on input field when page loads
+        document.querySelector('.text-input').focus();
+
+        // Auto-resize textarea
+        const textarea = document.querySelector('.text-input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Truncate long file names
+        function truncateFileName(name, maxLength) {
+            if (name.length <= maxLength) return name;
+            return name.substring(0, maxLength/2) + '...' + name.substring(name.length - maxLength/2);
+        }
+
+        // Copy to clipboard function
+        function copyToClipboard(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = button.querySelector('i');
+                icon.className = 'fas fa-check';
+                setTimeout(() => {
+                    icon.className = 'far fa-copy';
+                }, 2000);
+            });
+        }
+
+        // New chat button functionality
+        document.getElementById('new-chat-btn').addEventListener('click', function() {
+            if (confirm('Start a new chat? Your current conversation will be cleared.')) {
+                document.querySelector('[name="clear_chat"]').click();
+            }
+        });
+
+        // Add pulse animation to new messages
+        function addNewMessage(role, content) {
+            const chatHistory = document.getElementById('chat-history');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${role} new-message`;
+            
+            if (role === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-meta" style="text-align: right;">You • Just now</div>
+                        <div class="chat-bubble user">
+                            ${content}
+                        </div>
+                    </div>
+                    <div class="message-avatar user">
+                        <i class="fas fa-user"></i>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-avatar bot">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-meta">MeetIntelli AI • Just now</div>
+                        <div class="chat-bubble bot has-shadow">
+                            ${content}
+                        </div>
+                        <div class="message-actions">
+                            <button class="message-action copy" data-tooltip="Copy" onclick="copyToClipboard(this, '${content.replace(/'/g, "\\'")}')">
+                                <i class="far fa-copy"></i>
+                            </button>
+                            <button class="message-action like" data-tooltip="Like">
+                                <i class="far fa-thumbs-up"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Remove animation class after it completes
+            setTimeout(() => {
+                messageDiv.classList.remove('new-message');
+            }, 500);
+        }
+
+        // Simulate typing indicator
+        function showTypingIndicator() {
+            const chatHistory = document.getElementById('chat-history');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message bot';
+            typingDiv.innerHTML = `
+                <div class="message-avatar bot">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-content">
+                            <div class="typing-text">MeetIntelli is typing</div>
+                            <div class="typing-dots">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatHistory.appendChild(typingDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            return typingDiv;
+        }
+
+        // Hide typing indicator
+        function hideTypingIndicator(typingDiv) {
+            typingDiv.remove();
+        }
     </script>
 </body>
 </html>
-
-
