@@ -678,6 +678,21 @@
         min-width: 200px;
         margin-bottom: 0;
     }
+
+    .logout-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        padding: 0.5rem;
+        border-radius: var(--radius-md);
+        transition: var(--transition);
+    }
+
+    .logout-button:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: var(--primary);
+    }
 }
     </style>
 </head>
@@ -717,8 +732,16 @@
                 </div>
                 <span>MeetIntelli</span>
             </div>
-            <div class="user-avatar">
-                <i class="fas fa-user"></i>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-button" style="background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
             </div>
         </header>
         

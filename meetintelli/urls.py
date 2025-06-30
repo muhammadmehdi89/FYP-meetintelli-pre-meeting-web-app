@@ -18,9 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from home.views import home
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LogoutView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),  # This enables all auth URLs
     path('', login_required(home), name='home'),  # Only this home route needed
+    path('logout/', LogoutView.as_view(), name='logout'),
 ]
