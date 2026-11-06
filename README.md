@@ -67,7 +67,7 @@ Muhammad Mehdi:
 •	Audio Processing and Text Generation Logic
 •	Chrome Extension Development
 •	Backend API Design and Integration
-•	Fine-Tuning Llama 2 (7B) with LoRA and QLoRA
+•	Fine-Tuning Llama 2 (7B) with LoRA and Q-LoRA
 •	End-to-end system building
 Milestones
 Phase 1: Requirements Gathering and Planning
